@@ -10,9 +10,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ProductBloc(this._apiService) : super(const ProductInitialState()) {
     on<LoadProductsEvent>(_onLoadProducts);
     on<LoadProductByIdEvent>(_onLoadProductById);
-    on<CreateProductEvent>(_onCreateProduct);
-    on<UpdateProductEvent>(_onUpdateProduct);
-    on<DeleteProductEvent>(_onDeleteProduct);
   }
 
   Future<void> _onLoadProducts(
@@ -70,70 +67,4 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     }
   }
 
-  // CREATE - Add a new product
-  Future<void> _onCreateProduct(
-      CreateProductEvent event,
-      Emitter<ProductState> emit,
-      ) async {
-    emit(const ProductLoadingState());
-
-    try {
-      final createdProduct = await _apiService.createProduct(event.product);
-      emit(ProductCreatedState(createdProduct));
-
-      // Update cache
-      final products = await _apiService.getProducts();
-      await HiveService.cacheProducts(products);
-
-      emit(ProductLoadedState(products));
-    } catch (e) {
-      emit(ProductErrorState(e.toString()));
-    }
-  }
-
-  // UPDATE - Update an existing product
-  Future<void> _onUpdateProduct(
-      UpdateProductEvent event,
-      Emitter<ProductState> emit,
-      ) async {
-    emit(const ProductLoadingState());
-
-    try {
-      final updatedProduct = await _apiService.updateProduct(event.id, event.product);
-      emit(ProductUpdatedState(updatedProduct));
-
-      // Update cache
-      final products = await _apiService.getProducts();
-      await HiveService.cacheProducts(products);
-
-      emit(ProductLoadedState(products));
-    } catch (e) {
-      emit(ProductErrorState(e.toString()));
-    }
-  }
-
-  // DELETE - Delete a product
-  Future<void> _onDeleteProduct(
-      DeleteProductEvent event,
-      Emitter<ProductState> emit,
-      ) async {
-    emit(const ProductLoadingState());
-
-    try {
-      final success = await _apiService.deleteProduct(event.id);
-      if (success) {
-        emit(ProductDeletedState(event.id));
-
-        // Update cache
-        final products = await _apiService.getProducts();
-        await HiveService.cacheProducts(products);
-
-        emit(ProductLoadedState(products));
-      } else {
-        emit(const ProductErrorState('Failed to delete product'));
-      }
-    } catch (e) {
-      emit(ProductErrorState(e.toString()));
-    }
-  }
 }

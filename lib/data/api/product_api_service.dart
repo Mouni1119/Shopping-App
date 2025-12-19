@@ -44,59 +44,5 @@ class ProductApiService {
     }
   }
 
-  // CREATE - Add a new product
-  Future<ProductModel> createProduct(ProductModel product) async {
-    try {
-      final response = await http.post(
-        Uri.parse(baseUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(product.toJson()),
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final jsonData = json.decode(response.body);
-        return ProductModel.fromJson(jsonData);
-      } else {
-        throw Exception('Failed to create product: ${response.statusCode}, Body: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Error creating product: $e');
-    }
-  }
-
-  // UPDATE - Update an existing product
-  Future<ProductModel> updateProduct(int id, ProductModel product) async {
-    try {
-      final response = await http.put(
-        Uri.parse('$baseUrl/$id'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(product.toJson()),
-      );
-
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        return ProductModel.fromJson(jsonData);
-      } else {
-        throw Exception('Failed to update product: ${response.statusCode}, Body: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Error updating product: $e');
-    }
-  }
-
-  // DELETE - Delete a product
-  Future<bool> deleteProduct(int id) async {
-    try {
-      final response = await http.delete(Uri.parse('$baseUrl/$id'));
-
-      if (response.statusCode == 200 || response.statusCode == 204) {
-        return true;
-      } else {
-        throw Exception('Failed to delete product: ${response.statusCode}, Body: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Error deleting product: $e');
-    }
-  }
 }
 
