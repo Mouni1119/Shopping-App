@@ -25,7 +25,7 @@ void setupDependencyInjection() {
         () => CartBloc(),
   );
 
-  // Register Checkout BLoC - NEW
+  // Register Checkout BLoC
   getIt.registerFactory<CheckoutBloc>(
         () => CheckoutBloc(),
   );

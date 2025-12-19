@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart'; // Add this
+import 'data/injection_container.dart';
 import 'data/models/product_model.dart';
-import 'di/injection_container.dart';
 import 'logic/bloc/cart/cart_bloc.dart';
 import 'logic/bloc/poduct/product_bloc.dart';
 import 'logic/bloc/poduct/product_event.dart';
