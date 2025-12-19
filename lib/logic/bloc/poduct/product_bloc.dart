@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../data/api/product_api_service.dart';
-import '../../data/hive/hive_service.dart'; // Add this import
+import '../../../data/api/product_api_service.dart';
+import '../../../data/hive/hive_service.dart';
 import 'product_event.dart';
 import 'product_state.dart';
 

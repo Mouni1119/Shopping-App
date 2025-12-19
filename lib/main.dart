@@ -4,8 +4,8 @@ import 'package:hive_flutter/hive_flutter.dart'; // Add this
 import 'data/models/product_model.dart';
 import 'di/injection_container.dart';
 import 'logic/bloc/cart/cart_bloc.dart';
-import 'logic/bloc/product_bloc.dart';
-import 'logic/bloc/product_event.dart';
+import 'logic/bloc/poduct/product_bloc.dart';
+import 'logic/bloc/poduct/product_event.dart';
 import 'presentation/screens/product_list_screen.dart';
 
 void main() async {
