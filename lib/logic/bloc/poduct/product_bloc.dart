@@ -16,27 +16,30 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       LoadProductsEvent event,
       Emitter<ProductState> emit,
       ) async {
+    // First, try to load cached products
     try {
-      final hasCache = await HiveService.hasCachedProducts();
-
-      if (hasCache) {
-
-        final cachedProducts = await HiveService.getCachedProducts();
-        if (cachedProducts.isNotEmpty) {
-          emit(ProductLoadedState(cachedProducts));
-        }
+      final cachedProducts = await HiveService.getCachedProducts();
+      if (cachedProducts.isNotEmpty) {
+        // Show cached data immediately
+        emit(ProductLoadedState(cachedProducts));
       } else {
+        // No valid cache, show loading
         emit(const ProductLoadingState());
       }
-      final products = await _apiService.getProducts();
+    } catch (e) {
+      // If cache read fails, show loading
+      emit(const ProductLoadingState());
+    }
 
+    // Then, try to fetch fresh data from API
+    try {
+      final products = await _apiService.getProducts();
       // Cache the fresh products
       await HiveService.cacheProducts(products);
-
       // Update UI with fresh data (this will replace cached data if it was shown)
       emit(ProductLoadedState(products));
     } catch (e) {
-      // If API fails, try to show cached data
+      // If API fails, check if we have cached data to show
       try {
         final cachedProducts = await HiveService.getCachedProducts();
         if (cachedProducts.isNotEmpty) {

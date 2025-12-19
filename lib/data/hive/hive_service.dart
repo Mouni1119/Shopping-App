@@ -18,13 +18,41 @@ class HiveService {
   // Get cached products
   static Future<List<ProductModel>> getCachedProducts() async {
     final box = Hive.box(productsBox);
-    return box.values.cast<ProductModel>().toList();
+    final List<ProductModel> products = [];
+    int corruptedCount = 0;
+    
+    try {
+      for (var key in box.keys) {
+        try {
+          final value = box.get(key);
+          if (value != null && value is ProductModel) {
+            products.add(value);
+          } else {
+            corruptedCount++;
+          }
+        } catch (e) {
+          // Skip corrupted entries
+          corruptedCount++;
+          continue;
+        }
+      }
+      
+      // If box has entries but all are corrupted, clear the box
+      if (box.isNotEmpty && products.isEmpty && corruptedCount > 0) {
+        await box.clear();
+      }
+    } catch (e) {
+      // If box is corrupted, clear it
+      await box.clear();
+    }
+    
+    return products;
   }
 
   // Check if cache exists
   static Future<bool> hasCachedProducts() async {
-    final box = Hive.box(productsBox);
-    return box.isNotEmpty;
+    final cachedProducts = await getCachedProducts();
+    return cachedProducts.isNotEmpty;
   }
 
   // CART FUNCTIONS
@@ -38,7 +66,35 @@ class HiveService {
   // Get all cart items
   static Future<List<ProductModel>> getCartItems() async {
     final box = Hive.box(cartBox);
-    return box.values.cast<ProductModel>().toList();
+    final List<ProductModel> cartItems = [];
+    int corruptedCount = 0;
+    
+    try {
+      for (var key in box.keys) {
+        try {
+          final value = box.get(key);
+          if (value != null && value is ProductModel) {
+            cartItems.add(value);
+          } else {
+            corruptedCount++;
+          }
+        } catch (e) {
+          // Skip corrupted entries
+          corruptedCount++;
+          continue;
+        }
+      }
+      
+      // If box has entries but all are corrupted, clear the box
+      if (box.isNotEmpty && cartItems.isEmpty && corruptedCount > 0) {
+        await box.clear();
+      }
+    } catch (e) {
+      // If box is corrupted, clear it
+      await box.clear();
+    }
+    
+    return cartItems;
   }
 
   // Remove from cart
