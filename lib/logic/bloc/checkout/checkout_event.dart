@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-/// Checkout Events
-/// These events are triggered by user actions in the checkout screen
+
 abstract class CheckoutEvent extends Equatable {
   const CheckoutEvent();
 

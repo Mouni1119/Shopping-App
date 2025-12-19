@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'checkout_event.dart';
 
-/// Checkout States
-/// These states represent different stages of the checkout process
+
 abstract class CheckoutState extends Equatable {
   const CheckoutState();
 
